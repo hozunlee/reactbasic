@@ -1,6 +1,13 @@
 import { useState } from 'react';
 
-export const Hello = ({ name, isMale, children, age, count, plusCount }) => {
+export const Hello = ({
+  name,
+  isMale,
+  children,
+  age,
+  count,
+  plusMinusCount,
+}) => {
   console.log('@@@@@@@@@@@@hello');
   // boolean type의 경우 is 를 붙이는게 좋다.
   const [isActive, setActive] = useState(false);
@@ -16,7 +23,7 @@ export const Hello = ({ name, isMale, children, age, count, plusCount }) => {
         회원등급 : {isActive ? '정' : '준'}회원 - {count}{' '}
       </p>
       <button onClick={() => setActive(!isActive)}>toggle</button>
-      <button onClick={plusCount}>카운타</button>
+      <button onClick={plusMinusCount}>카운타</button>
     </>
   );
 };

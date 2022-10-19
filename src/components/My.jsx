@@ -1,29 +1,23 @@
 import React from 'react';
 import Login from './Login';
 import Profile from './Profile';
-
+import { useSession } from '../hooks/session-context';
 /**
  *
  * @returns
  */
 
 // FIXME 나중엔 session을 받지 않고 context로 관리함
-const My = ({ session = {}, logout, removeCartItem }) => {
+const My = ({ plusMinusCount }) => {
+  const { session } = useSession();
+
   return (
     <div>
-      {session.loginUser ? (
-        <Profile session={session} logout={logout} />
+      {session?.loginUser ? (
+        <Profile plusMinusCount={plusMinusCount} />
       ) : (
-        <Login />
+        <Login plusMinusCount={plusMinusCount} />
       )}
-      <ul>
-        {session?.cart.map((item) => (
-          <>
-            <li key={item.id}>{item.name}</li>
-            <button onClick={() => removeCartItem(item.id)}>삭제</button>
-          </>
-        ))}
-      </ul>
     </div>
   );
 };

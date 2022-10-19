@@ -1,19 +1,46 @@
 import { v4 } from 'uuid';
-import React from 'react';
+import React, { useRef } from 'react';
 
-const Profile = ({ session, logout }) => {
+import { useSession } from '../hooks/session-context';
+import { useEffect } from 'react';
+
+const Profile = ({ plusMinusCount }) => {
+  const { session, logout, removeCartItem, addCartItem } = useSession();
+  const newItemRef = useRef();
+
+  useEffect(() => {
+    plusMinusCount(false);
+  }, []);
   return (
     <>
       <div>User ID: {session.loginUser.name}</div>
       <button onClick={() => logout()}>로그아웃</button>
-      <div>{v4()}</div>
       <ul>
-        {session?.cart.map((item) => {
-          // 유니크한 key 값이 없을 수도있으니 uuid를 사용하라
-          return <li key={item.id}>{item.name}</li>;
-          // return <li ket={v4()}>{item.name}</li>;
-        })}
+        {session?.cart.map((item) => (
+          <React.Fragment key={item.id}>
+            <li>{item.name}</li>
+            <button onClick={() => removeCartItem(item.id)}>삭제</button>
+          </React.Fragment>
+        ))}
       </ul>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          console.log(
+            'newItemRef.current?.value :>> ',
+            newItemRef.current?.value
+          );
+          addCartItem(newItemRef.current?.value);
+
+          if (newItemRef.current?.value) {
+            newItemRef.current.value = '';
+          }
+        }}
+      >
+        <label htmlFor=''>
+          <input type='text' ref={newItemRef} />
+        </label>
+      </form>
     </>
   );
 };

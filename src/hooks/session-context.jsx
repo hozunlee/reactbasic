@@ -8,13 +8,14 @@
 // …
 // export const useCount =()=> useContext(CountContext);
 
+import { useEffect, useMemo } from 'react';
 import { createContext, useContext, useState } from 'react';
 
 const sampleSession = {
   loginUser: { id: 1, name: '호준' },
   cart: [
-    { id: 100, name: '파' },
-    { id: 200, name: '신라면' },
+    { id: 100, name: '파', price: 3000 },
+    { id: 200, name: '신라면', price: 1500 },
   ],
 };
 
@@ -22,6 +23,7 @@ const SessionContext = createContext();
 
 export const SessionProvider = ({ children }) => {
   const [session, setSession] = useState(sampleSession);
+  // const [totalPrice, setTotalPrice] = useState();
 
   const logout = () => {
     console.log('omg logout! boom');
@@ -48,13 +50,39 @@ export const SessionProvider = ({ children }) => {
     const { id } = session.cart[session.cart.length - 1];
     return setSession({
       ...session,
-      cart: [...session.cart, { id: id + 100, name: item }],
+      cart: [...session.cart, { id: id + 100, name: item, price: 5000 }],
     });
   };
 
+  // console.log('session.cart :>> ', session.cart);
+
+  // const prices = session.cart.filter((item) => item.price);
+  // console.log('prices :>> ', prices);
+
+  const totalPrice = useMemo(() => {
+    let total = 0;
+    for (const a of session.cart) {
+      total += a.price;
+    }
+    console.log('total :>> ', total);
+    return total;
+  }, []);
+
+  useEffect(() => {
+    totalPrice;
+    console.log('total :>> ', totalPrice);
+  }, []);
+
   return (
     <SessionContext.Provider
-      value={{ session, logout, removeCartItem, login, addCartItem }}
+      value={{
+        session,
+        logout,
+        removeCartItem,
+        login,
+        addCartItem,
+        totalPrice,
+      }}
     >
       {children}
     </SessionContext.Provider>

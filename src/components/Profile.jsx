@@ -8,6 +8,8 @@ const Profile = ({ plusMinusCount }) => {
   const { session, logout, removeCartItem, addCartItem } = useSession();
   const newItemRef = useRef();
 
+  console.log('session :>> ', session);
+
   useEffect(() => {
     plusMinusCount(false);
   }, []);

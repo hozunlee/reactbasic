@@ -1,13 +1,3 @@
-// // src/hooks/counter-context.jsx          GOOD!
-// export const CountProvider = ({children}) => {
-//   const [count, setCount] = useState(0);
-//   const plusCount = () => setCount(count + 1);
-//   return (
-//     <CountContext.Provider
-//              value={{count, plusCount}}>
-// …
-// export const useCount =()=> useContext(CountContext);
-
 import { useEffect, useMemo } from 'react';
 import { createContext, useContext, useState } from 'react';
 
@@ -35,7 +25,13 @@ export const SessionProvider = ({ children }) => {
     setSession({ ...session, loginUser: userInfo });
   };
 
+  /**
+   *
+   * @param {number} itemId : cart에 달려있는 itemId를 넘겨준다.
+   * @returns session 정보에서 item.id와 비교해 해당 cart 정보를 삭제한다.
+   */
   const removeCartItem = (itemId) => {
+    console.log('typeof itemId :>> ', typeof itemId);
     // 이곳에 작성하세요~
     // const temp = session.cart.filter((item) => item.id !== itemId);
     // const newTemp = { ...session, cart: temp };
@@ -46,19 +42,26 @@ export const SessionProvider = ({ children }) => {
     });
   };
 
+  /**
+   *
+   * @param {string} item : input에서 추가된 ref.current.value가 들어온다.
+   * @returns session에 추가된 cart 정보를 넣고 setter 한다.
+   */
   const addCartItem = (item) => {
-    const { id } = session.cart[session.cart.length - 1];
+    const id =
+      session.cart.length > 0 ? session.cart[session.cart.length - 1].id : 1000;
+
+    console.log('id :>> ', id);
+
     return setSession({
       ...session,
       cart: [...session.cart, { id: id + 100, name: item, price: 5000 }],
     });
   };
 
-  // console.log('session.cart :>> ', session.cart);
-
-  // const prices = session.cart.filter((item) => item.price);
-  // console.log('prices :>> ', prices);
-
+  /**
+   * useMemo를 사용해 totalprice 값을 session.cart가 바뀔때만 수정한다.
+   */
   const totalPrice = useMemo(() => {
     let total = 0;
     for (const a of session.cart) {
@@ -66,7 +69,7 @@ export const SessionProvider = ({ children }) => {
     }
     console.log('total :>> ', total);
     return total;
-  }, []);
+  }, [session.cart]);
 
   useEffect(() => {
     totalPrice;
